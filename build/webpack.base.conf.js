@@ -14,9 +14,9 @@ const config = env => {
 
 	const concatPlugins = [];
 	// 生产环境单独提取css
-	// isProd && concatPlugins.push(new MiniCssExtractPlugin({
-	// 	name: '[name].[contenthash].[ext]'
-	// }));
+	isProd && concatPlugins.push(new MiniCssExtractPlugin({
+		name: '[name].[contenthash].[ext]'
+	}));
 
 	return {
 		mode: env,
@@ -49,63 +49,58 @@ const config = env => {
 					],
 					include: pathResolve('../src')
 				},
-				{
-					test: /\.css$/,
-					include: pathResolve('../src'),
-					use: [
-						{
-							loader: MiniCssExtractPlugin.loader,
-							options: {
-								publicPath: '/external',
-							}
-						},
-						'css-loader'
-					]
-				}
 				// {
-				// 	test: /\.s?css$/,
+				// 	test: /\.css$/,
 				// 	include: pathResolve('../src'),
 				// 	use: [
-				// 		isDev
-				// 			? 'vue-style-loader'
-				// 			:  {
-				// 				loader: MiniCssExtractPlugin.loader,
-				// 				options: {
-				// 					publicPath: pathResolve('../dist/css')
-				// 				}
-				// 			},
 				// 		{
-				//
-				// 			loader: 'css-loader',
+				// 			loader: MiniCssExtractPlugin.loader,
 				// 			options: {
-				// 				importLoaders: 2,
-				// 				// esModule: false
+				// 				publicPath: '/external',
 				// 			}
 				// 		},
-				// 		{
-				// 			loader: 'postcss-loader',
-				// 			options: {
-				// 				plugins: [
-				// 					require('autoprefixer')()
-				// 				]
-				// 			}
-				// 		},
-				// 		'sass-loader'
+				// 		'css-loader'
 				// 	]
-				// },
-				// {
-				// 	test: /\.(png|jpe?g|gif|svg|webp)$/i,
-				// 	use: [
-				// 		{
-				// 			loader: 'url-loader',
-				// 			options: {
-				// 				limit: 8192,
-				// 				esModule: false,
-				// 				name: 'image/[name].[hash:7].[ext]'
-				// 			},
-				// 		},
-				// 	],
 				// }
+				{
+					test: /\.s?css$/,
+					include: pathResolve('../src'),
+					use: [
+						isDev
+							? 'vue-style-loader'
+							: MiniCssExtractPlugin.loader,
+						{
+
+							loader: 'css-loader',
+							options: {
+								importLoaders: 2,
+								// esModule: false
+							}
+						},
+						{
+							loader: 'postcss-loader',
+							options: {
+								plugins: [
+									require('autoprefixer')()
+								]
+							}
+						},
+						'sass-loader'
+					]
+				},
+				{
+					test: /\.(png|jpe?g|gif|svg|webp)$/i,
+					use: [
+						{
+							loader: 'url-loader',
+							options: {
+								limit: 8192,
+								esModule: false,
+								name: 'image/[name].[hash:7].[ext]'
+							},
+						},
+					],
+				}
 			]
 		},
 		plugins: [
@@ -116,16 +111,10 @@ const config = env => {
 			}),
 			new HtmlWebpackPlugin({
 				title: 'au-vue-cli',
-				chunks: ['index'],
 				favicon: pathResolve('../public/assets/favicon.ico'),
 				template: pathResolve('../public/index.html')
 			}),
-			new MiniCssExtractPlugin({
-				filename: '[name].css',
-				chunkFilename: '[id].css',
-			})
-		]
-		// ].concat(concatPlugins),
+		].concat(concatPlugins),
 	}
 };
 

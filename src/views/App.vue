@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import Detail from './detail/detail'
+	import Detail from '@views/detail/detail'
 
 	export default {
 		name: 'App',
@@ -15,13 +15,13 @@
 		},
 		data() {
 			return {
-				text: 'This is App Page'
+				text: 'To be a whale not a fish!'
 			}
 		},
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	div{
 		color: lightcoral;
 	}

@@ -1,13 +1,10 @@
 {
-  "name": "au-vue-cli",
+  "name": "au-vue-app",
   "version": "1.0.0",
   "description": "custom scaffold of vue",
   "main": "index.js",
   "author": "zhaohuanyu",
   "license": "MIT",
-  "sideEffects": [
-    "*.scss"
-  ],
   "scripts": {
     "start": "webpack-dev-server --env development --config build/webpack.base.conf.js",
     "build": "webpack --env production --config build/webpack.base.conf.js"
