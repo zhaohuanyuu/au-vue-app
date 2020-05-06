@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -96,10 +97,32 @@ const config = env => {
 							options: {
 								limit: 8192,
 								esModule: false,
-								name: 'image/[name].[hash:7].[ext]'
+								outputPath: 'images',
+								name: '[name].[hash:7].[ext]',
 							},
 						},
 					],
+				},
+				{
+					test: /\.svg$/i,
+					use: [
+						{
+							loader: 'url-loader',
+							options: {
+								generator: (content) => svgToMiniDataURI(content.toString()),
+							},
+						},
+					],
+				},
+				{
+					test: /\.(woff|woff2|eot|ttf|otf)$/,
+					loader: 'url-loader',
+					include: pathResolve('../src'),
+					options: {
+						limit: 4096,
+						name: '[name].[hash:5].[ext]',
+						outputPath: 'fonts'
+					}
 				}
 			]
 		},

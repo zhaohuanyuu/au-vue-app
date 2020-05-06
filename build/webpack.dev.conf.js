@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const { pathResolve } = require('./utils');
@@ -11,6 +12,7 @@ module.exports = {
 		overlay: true
 	},
 	plugins:[
+		new webpack.ProgressPlugin(),
 		new FriendlyErrorsWebpackPlugin({
 			compilationSuccessInfo: {
 				messages: ['You application is running here http://localhost:8080'],
