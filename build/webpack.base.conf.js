@@ -5,13 +5,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 const { pathResolve } = require('./utils');
 
 const config = env => {
 	const isDev = env === 'development';
 	const isProd = env === 'production';
-
 
 	const concatPlugins = [];
 	// 生产环境单独提取css
@@ -31,7 +31,8 @@ const config = env => {
 			extensions: ['.vue', '.js', '.json'],
 			modules: [pathResolve('../node_modules')],
 			alias: {
-				'@views': pathResolve('../src/views'),
+        '@scss': pathResolve('../src/scss'),
+        '@views': pathResolve('../src/views'),
 				'@components': pathResolve('../src/components')
 			},
 		},
@@ -50,31 +51,16 @@ const config = env => {
 					],
 					include: pathResolve('../src')
 				},
-				// {
-				// 	test: /\.css$/,
-				// 	include: pathResolve('../src'),
-				// 	use: [
-				// 		{
-				// 			loader: MiniCssExtractPlugin.loader,
-				// 			options: {
-				// 				publicPath: '/external',
-				// 			}
-				// 		},
-				// 		'css-loader'
-				// 	]
-				// }
 				{
 					test: /\.s?css$/,
 					include: pathResolve('../src'),
 					use: [
-						isDev
-							? 'vue-style-loader'
-							: MiniCssExtractPlugin.loader,
+						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
 						{
 
 							loader: 'css-loader',
 							options: {
-								importLoaders: 2,
+								importLoaders: 3,
 								// esModule: false
 							}
 						},
@@ -86,7 +72,17 @@ const config = env => {
 								]
 							}
 						},
-						'sass-loader'
+            'sass-loader',
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: [
+                  pathResolve('../src/scss/variables.scss'),
+                  pathResolve('../src/scss/mixins.scss'),
+                  pathResolve('../src/scss/functions.scss'),
+                ]
+              }
+            }
 					]
 				},
 				{
@@ -120,7 +116,7 @@ const config = env => {
 					include: pathResolve('../src'),
 					options: {
 						limit: 4096,
-						name: '[name].[hash:5].[ext]',
+						name: '[name].[hash:6].[ext]',
 						outputPath: 'fonts'
 					}
 				}
@@ -128,15 +124,16 @@ const config = env => {
 		},
 		plugins: [
 			new VueLoaderPlugin(),
-			new CleanWebpackPlugin(),
-			new webpack.DefinePlugin({
-				NODE_ENV: env
-			}),
+      new CleanWebpackPlugin(),
 			new HtmlWebpackPlugin({
-				title: 'au-vue-cli',
+        title: 'au-vue-app',
 				favicon: pathResolve('../public/assets/favicon.ico'),
-				template: pathResolve('../public/index.html')
+        template: pathResolve('../public/index.html'),
+        files: {
+          css: pathResolve('../src/scss/base.scss')
+        }
 			}),
+      new HardSourceWebpackPlugin(),
 		].concat(concatPlugins),
 	}
 };
@@ -147,6 +144,6 @@ module.exports = (env) => {
 	const prodConfig = require('./webpack.prod.conf');
 
 	return env === 'development'
-					? merge(baseConfig, devConfig)
-					: merge(baseConfig, prodConfig)
+          ? merge(baseConfig, devConfig)
+          : merge(baseConfig, prodConfig)
 };

@@ -22,12 +22,12 @@ module.exports = {
 		},
 		minimizer: [
 			new TerserPlugin({
-				cache: true,   // 启用文件缓存
-				parallel: true,  // 使用多进程并行执行任务来提高构建效率
-				sourceMap: true,  // 将错误消息位置映射到模块
+				cache: true,
+				parallel: true,
+				sourceMap: true,
 				terserOptions: {
-					drop_console: true,  // 打包时剔除所有console.log
-					drop_debugger: true  // 打包时剔除所有debugger
+					drop_console: true,
+					drop_debugger: true
 				}
 			}),
 			new OptimizeCssAssetsPlugin({})

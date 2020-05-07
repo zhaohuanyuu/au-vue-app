@@ -1,24 +1,24 @@
 <template>
-	<div>
-		<Detail />
-		<p>{{ text }}</p>
-	</div>
+  <div>
+    <Detail />
+    <p>{{ text }}</p>
+  </div>
 </template>
 
 <script>
-	import Detail from '@views/detail/detail'
+import Detail from "@views/detail/detail";
 
-	export default {
-		name: 'App',
-		components: {
-			Detail
-		},
-		data() {
-			return {
-				text: 'To be a whale not a fish!'
-			}
-		},
-	}
+export default {
+  name: "App",
+  components: {
+    Detail
+  },
+  data() {
+    return {
+      text: "To be a whale not just a fish!"
+    };
+  }
+};
 </script>
 
 <style lang="scss" scoped>
