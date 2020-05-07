@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
-const { pathResolve } = require('./utils');
+const { pathResolve } = require('./config-utils');
 
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',

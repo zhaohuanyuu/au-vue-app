@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-const { pathResolve } = require('./utils');
+const { pathResolve } = require('./config-utils');
 
 const config = env => {
 	const isDev = env === 'development';

@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const { pathResolve } = require('./utils');
+const { pathResolve } = require('./config-utils');
 
 module.exports = {
 	devtool: 'cheap-module-source-map',
