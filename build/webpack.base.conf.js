@@ -86,7 +86,7 @@ const config = env => {
 					]
 				},
 				{
-					test: /\.(png|jpe?g|gif|svg|webp)$/i,
+					test: /\.(png|jpe?g|gif|webp)$/i,
 					use: [
 						{
 							loader: 'url-loader',
@@ -97,6 +97,28 @@ const config = env => {
 								name: '[name].[hash:7].[ext]',
 							},
 						},
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                mozjpeg: {
+                  progressive: true,
+                  quality: 65
+                },
+                optipng: {
+                  enabled: false,
+                },
+                pngquant: {
+                  quality: [0.65, 0.90],
+                  speed: 4
+                },
+                gifsicle: {
+                  interlaced: false,
+                },
+                webp: {
+                  quality: 75
+                }
+              }
+            }
 					],
 				},
 				{
@@ -116,7 +138,7 @@ const config = env => {
 					include: pathResolve('../src'),
 					options: {
 						limit: 4096,
-						name: '[name].[hash:6].[ext]',
+						name: '[name].[contenthash:5].[ext]',
 						outputPath: 'fonts'
 					}
 				}
