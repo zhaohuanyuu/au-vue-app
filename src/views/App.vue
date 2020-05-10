@@ -1,7 +1,7 @@
 <template>
   <div>
     <Detail />
-    <p>{{ text }}</p>
+    <p class="text">{{ text }}</p>
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
   },
   data() {
     return {
+      result: 0,
       text: "To be a whale not just a fish!"
     };
   }

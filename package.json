@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "zhaohuanyu",
   "license": "MIT",
+  "sideEffects": [
+    "*.vue"
+  ],
   "scripts": {
     "start": "webpack-dev-server --env development --config build/webpack.base.conf.js",
     "build": "webpack --env production --config build/webpack.base.conf.js"
@@ -30,6 +33,7 @@
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
+    "purgecss-webpack-plugin": "^2.2.0",
     "sass-loader": "^8.0.2",
     "sass-resources-loader": "^2.0.3",
     "terser-webpack-plugin": "^3.0.0",

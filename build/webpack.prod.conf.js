@@ -6,18 +6,21 @@ const { pathResolve } = require('./config-utils');
 module.exports = {
 	devtool: 'cheap-module-source-map',
 	optimization: {
-		usedExports: true,
 		splitChunks: {
 			cacheGroups: {
-				chunks: 'all',
 				vendors: {
+          chunks: 'all',
+          name: 'vendors',
 					test: /[\\/]node_modules[\\/]/,
-					filename: "[name].vendors.js"
+					filename: "[name].js"
 				},
-				styles: {
-					test: /\.s?css$/,
-					enforce: true
-				}
+        styles: {
+          name: 'style',
+          test: /\.s?css$/,
+          chunks: 'initial',
+          enforce: true,
+          filename: "[name].js"
+        }
 			}
 		},
 		minimizer: [

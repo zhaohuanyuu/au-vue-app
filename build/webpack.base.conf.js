@@ -1,9 +1,11 @@
+const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
@@ -12,12 +14,21 @@ const { pathResolve } = require('./config-utils');
 const config = env => {
 	const isDev = env === 'development';
 	const isProd = env === 'production';
+	const pathSrc = pathResolve('../src');
 
-	const concatPlugins = [];
+	console.log(glob.sync(`${pathResolve('../src')}/**/*.vue`, { nodir: true }));
+
+	const prodPlugins = [];
 	// 生产环境单独提取css
-	isProd && concatPlugins.push(new MiniCssExtractPlugin({
-		name: '[name].[contenthash].[ext]'
-	}));
+	isProd && prodPlugins.push(
+	  new MiniCssExtractPlugin({
+      name: '[name].[contenthash].[ext]'
+    }),
+    // new PurgecssPlugin({
+    //   paths: glob.sync(`${pathSrc}/**/*.vue`, { nodir: true }),
+    //   // whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ]
+    // })
+  );
 
 	return {
 		mode: env,
@@ -27,7 +38,7 @@ const config = env => {
 			filename: '[name].[hash].js'
 		},
 		resolve: {
-			mainFiles: ['index'],
+			mainFields: ['main'],
 			extensions: ['.vue', '.js', '.json'],
 			modules: [pathResolve('../node_modules')],
 			alias: {
@@ -41,7 +52,7 @@ const config = env => {
 				{
 					test: /\.vue$/,
 					loader: 'vue-loader',
-					include: pathResolve('../src')
+					include: pathSrc
 				},
 				{
 					test: /\.jsx?$/,
@@ -49,11 +60,11 @@ const config = env => {
 						'thread-loader',
 						'babel-loader?cacheDirectory=true'
 					],
-					include: pathResolve('../src')
+					include: pathSrc
 				},
 				{
 					test: /\.s?css$/,
-					include: pathResolve('../src'),
+					include: pathSrc,
 					use: [
 						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
 						{
@@ -135,7 +146,7 @@ const config = env => {
 				{
 					test: /\.(woff|woff2|eot|ttf|otf)$/,
 					loader: 'url-loader',
-					include: pathResolve('../src'),
+					include: pathSrc,
 					options: {
 						limit: 4096,
 						name: '[name].[contenthash:5].[ext]',
@@ -149,6 +160,7 @@ const config = env => {
       new CleanWebpackPlugin(),
 			new HtmlWebpackPlugin({
         title: 'au-vue-app',
+        chunk: ['vendor', 'style'],
 				favicon: pathResolve('../public/assets/favicon.ico'),
         template: pathResolve('../public/index.html'),
         files: {
@@ -156,7 +168,12 @@ const config = env => {
         }
 			}),
       new HardSourceWebpackPlugin(),
-		].concat(concatPlugins),
+		].concat(prodPlugins),
+    stats: {
+		  colors: {
+        green: '\u001b[32m'
+      }
+    }
 	}
 };
 
