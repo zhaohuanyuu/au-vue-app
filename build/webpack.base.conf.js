@@ -12,27 +12,50 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const { pathResolve } = require('./config-utils');
 
 const config = env => {
-	const isDev = env === 'development';
-	const isProd = env === 'production';
+	const isDev = env.development;
+	const isProd = env.production;
+	const isMulti = env.multi;
+	const modeType = isDev ? 'development' : 'production';
 	const pathSrc = pathResolve('../src');
 
-	console.log(glob.sync(`${pathResolve('../src')}/**/*.vue`, { nodir: true }));
-
 	const prodPlugins = [];
-	// 生产环境单独提取css
-	isProd && prodPlugins.push(
-	  new MiniCssExtractPlugin({
-      name: '[name].[contenthash].[ext]'
-    }),
-    // new PurgecssPlugin({
-    //   paths: glob.sync(`${pathSrc}/**/*.vue`, { nodir: true }),
-    //   // whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ]
-    // })
-  );
+  // 生产环境单独提取css
+  if (isProd) {
+    prodPlugins.push(
+      new MiniCssExtractPlugin({
+        name: '[name].[contenthash].[ext]'
+      }),
+      // new PurgecssPlugin({
+      //   paths: glob.sync(`${pathSrc}/**/*.vue`, { nodir: true }),
+      //   // whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ]
+      // })
+    );
+  }
+
+  let entry = pathResolve('../src');
+  let htmlWebpackPlugins = [new HtmlWebpackPlugin({
+    title: 'au-vue-app',
+    chunk: ['vendor', 'style'],
+    favicon: pathResolve('../public/assets/favicon.ico'),
+    template: pathResolve('../public/index.html'),
+    files: {
+      css: pathResolve('../src/scss/base.scss')
+    }
+  })];
+  // 多页面配置
+	if (isMulti) {
+	  const { getMultiPathMap } = require('./config-utils');
+	  const { entries, htmlPlugins } = getMultiPathMap(glob, HtmlWebpackPlugin);
+
+	  entry = entries;
+    htmlWebpackPlugins = htmlPlugins;
+  }
+
+	// console.log(entry);
 
 	return {
-		mode: env,
-		entry: pathResolve('../src'),
+		mode: modeType,
+		entry: entry,
 		output: {
 			path: pathResolve('../dist'),
 			filename: '[name].[hash].js'
@@ -43,8 +66,9 @@ const config = env => {
 			modules: [pathResolve('../node_modules')],
 			alias: {
         '@scss': pathResolve('../src/scss'),
+        '@pages': pathResolve('../src/pages'),
         '@views': pathResolve('../src/views'),
-				'@components': pathResolve('../src/components')
+        '@components': pathResolve('../src/components')
 			},
 		},
 		module: {
@@ -158,17 +182,9 @@ const config = env => {
 		plugins: [
 			new VueLoaderPlugin(),
       new CleanWebpackPlugin(),
-			new HtmlWebpackPlugin({
-        title: 'au-vue-app',
-        chunk: ['vendor', 'style'],
-				favicon: pathResolve('../public/assets/favicon.ico'),
-        template: pathResolve('../public/index.html'),
-        files: {
-          css: pathResolve('../src/scss/base.scss')
-        }
-			}),
       new HardSourceWebpackPlugin(),
-		].concat(prodPlugins),
+		].concat(prodPlugins)
+     .concat(htmlWebpackPlugins),
     stats: {
 		  colors: {
         green: '\u001b[32m'
@@ -182,7 +198,7 @@ module.exports = (env) => {
 	const devConfig = require('./webpack.dev.conf');
 	const prodConfig = require('./webpack.prod.conf');
 
-	return env === 'development'
+	return env.development
           ? merge(baseConfig, devConfig)
           : merge(baseConfig, prodConfig)
 };
