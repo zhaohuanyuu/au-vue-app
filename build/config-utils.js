@@ -14,19 +14,11 @@ module.exports = {
       entries[pageName] = entryFile;
       htmlPlugins.push(
         new HtmlWebpackPlugin({
-          // template: path.join(__dirname, `../src/pages/${pageName}/index.html`),
-          template: path.resolve(__dirname, '../public/index.html'),
-          filename: `${pageName}.html`,
           chunks: [pageName],
-          inject: true,
-          minify: {
-            html5: true,
-            collapseWhitespace: true,
-            preserveLineBreaks: false,
-            minifyCSS: true,
-            minifyJS: true,
-            removeComments: false
-          }
+          filename: `${pageName}.html`,
+          // template: path.resolve(__dirname, '../public/index.html'),
+          favicon: path.join(__dirname, '../public/assets/favicon.ico'),
+          template: path.join(__dirname, `../src/pages/${pageName}/index.html`)
         })
       );
     });

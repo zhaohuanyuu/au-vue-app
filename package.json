@@ -9,10 +9,10 @@
     "*.vue"
   ],
   "scripts": {
-    "start": "webpack-dev-server --env.dev --config build/webpack.base.conf.js",
-    "build": "webpack --env.prod --config build/webpack.base.conf.js",
-    "start:multi": "webpack-dev-server --env.development --env.multi --config build/webpack.base.conf.js",
-    "build:multi": "webpack --env.production --env.multi --config build/webpack.base.conf.js"
+    "start:spa": "webpack-dev-server --env.dev --config build/webpack.base.conf.js",
+    "build:spa": "webpack --env.prod --config build/webpack.base.conf.js",
+    "start": "webpack-dev-server --env.development --env.multi --config build/webpack.base.conf.js",
+    "build": "webpack --env.production --env.multi --config build/webpack.base.conf.js"
   },
   "dependencies": {
     "core-js": "3",

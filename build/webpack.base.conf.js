@@ -65,7 +65,7 @@ const config = env => {
 			extensions: ['.vue', '.js', '.json'],
 			modules: [pathResolve('../node_modules')],
 			alias: {
-        '@scss': pathResolve('../src/scss'),
+        '@scss': pathResolve('../src/common/scss'),
         '@pages': pathResolve('../src/pages'),
         '@views': pathResolve('../src/views'),
         '@components': pathResolve('../src/components')
@@ -112,9 +112,9 @@ const config = env => {
               loader: 'sass-resources-loader',
               options: {
                 resources: [
-                  pathResolve('../src/scss/variables.scss'),
-                  pathResolve('../src/scss/mixins.scss'),
-                  pathResolve('../src/scss/functions.scss'),
+                  pathResolve('../src/common/scss/variables.scss'),
+                  pathResolve('../src/common/scss/mixins.scss'),
+                  pathResolve('../src/common/scss/functions.scss'),
                 ]
               }
             }
