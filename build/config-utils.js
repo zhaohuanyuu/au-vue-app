@@ -1,6 +1,4 @@
 const path = require('path');
-const glob = require('glob');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	pathResolve: dir => path.resolve(__dirname, dir),
