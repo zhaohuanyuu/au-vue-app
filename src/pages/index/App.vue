@@ -1,15 +1,20 @@
 <template>
   <div>
-    This is Index page
+    <charts />
   </div>
 </template>
 
 <script>
+  import charts from './echarts/index';
+
   export default {
-    name: 'App'
+    name: 'App',
+    components:{
+      charts
+    }
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

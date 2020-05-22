@@ -8,14 +8,19 @@ module.exports = {
 	devServer: {
 		hot: true,
 		noInfo: true,
-		// open: true,
-		overlay: true
+    overlay: true,
+    stats: {
+      preset: 'errors-warnings',
+		  colors: {
+        green: '\u001b[32m'
+      }
+    }
 	},
 	plugins:[
 		new webpack.ProgressPlugin(),
 		new FriendlyErrorsWebpackPlugin({
 			compilationSuccessInfo: {
-				messages: ['You application is running here http://localhost:8080'],
+				messages: ['Your application is running here http://localhost:8080'],
 				// notes: ['Some additionnal notes to be displayed unpon successful compilation']
 			},
 			additionalFormatters: [],

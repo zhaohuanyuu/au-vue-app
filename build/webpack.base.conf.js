@@ -184,12 +184,7 @@ const config = env => {
       new CleanWebpackPlugin(),
       new HardSourceWebpackPlugin(),
 		].concat(prodPlugins)
-     .concat(htmlWebpackPlugins),
-    stats: {
-		  colors: {
-        green: '\u001b[32m'
-      }
-    }
+     .concat(htmlWebpackPlugins)
 	}
 };
 
