@@ -1,30 +1,22 @@
 const webpack = require('webpack');
+// const DynamicAddEntry = require('./dynamicAddEntry');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
-const { pathResolve } = require('./config-utils');
+const { pathResolve } = require('./utils');
 
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',
-	devServer: {
-		hot: true,
-		noInfo: true,
-    overlay: true,
-    stats: {
-      preset: 'errors-warnings',
-		  colors: {
-        green: '\u001b[32m'
-      }
-    }
-	},
 	plugins:[
 		new webpack.ProgressPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    // new DynamicAddEntry(),
 		new FriendlyErrorsWebpackPlugin({
 			compilationSuccessInfo: {
-				messages: ['Your application is running here http://localhost:8080'],
+				messages: ['Your application is running here http://localhost:7000'],
 				// notes: ['Some additionnal notes to be displayed unpon successful compilation']
 			},
-			additionalFormatters: [],
-			additionalTransformers: []
+			// additionalFormatters: [],
+			// additionalTransformers: []
 		})
 	]
 };

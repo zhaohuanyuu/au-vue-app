@@ -9,7 +9,7 @@ const PurgecssPlugin = require('purgecss-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-const { pathResolve } = require('./config-utils');
+const { pathResolve } = require('./utils');
 
 const config = env => {
 	const isDev = env.development;
@@ -44,10 +44,11 @@ const config = env => {
   })];
   // 多页面配置
 	if (isMulti) {
-	  const { getMultiPathMap } = require('./config-utils');
+	  const { getMultiPathMap } = require('./utils');
 	  const { entries, htmlPlugins } = getMultiPathMap(glob, HtmlWebpackPlugin);
 
-	  entry = entries;
+	  entry = () => entries;
+	  // entry = entries;
     htmlWebpackPlugins = htmlPlugins;
   }
 
