@@ -11,7 +11,7 @@ const middlewareInstance = middleware(compiler);
 const express = require('express');
 const app = express();
 
-compiler.hooks.entryOption.tap('EntryOptionPlugin', (context, entry) => {
+compiler.hooks.entryOption.tap('entryOption', (context, entry) => {
   console.log('=======', context, entry)
 });
 
@@ -26,7 +26,7 @@ app.use(hotMiddleware(compiler, {
 fs.watch(pathResolve('../src/pages'), (eventType, filename) => {
   console.log(filename + ': trigger' +eventType);
 
-  compiler.hooks.make.tabAsync('dynamicEntry', )
+  // compiler.hooks.make.tabAsync('dynamicEntry', )
 
   /*const pageDir = pathResolve('../src/pages');
   const entryMap = fs.readdirSync(pageDir).reduce((entries, pagename) => {

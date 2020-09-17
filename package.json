@@ -1,6 +1,6 @@
 {
   "name": "au-vue-app",
-  "version": "1.0.2",
+  "version": "0.0.3",
   "description": "custom scaffold of vue",
   "main": "index.js",
   "author": "zhaohuanyu",
