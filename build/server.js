@@ -3,19 +3,30 @@ const { pathResolve } = require('./utils');
 const devConfig = require('./webpack.base.conf')({ multi: true, development: true});
 
 const webpack = require('webpack');
+const Koa = require('koa');
+const koaStatic = require('koa-static');
+const koaWebpack  = require('koa-webpack');
+
+const app = new Koa();
 const compiler = webpack(devConfig);
+const port = process.env.PORT || 7000
 
-// const Koa = require('koa');
-// const app = new Koa();
-const Express = require('express');
-const app = new Express();
-const devMiddleware = require('webpack-dev-middleware');
-const hotMiddleware = require('webpack-hot-middleware');
-const middlewareInstance = devMiddleware(compiler);
+async function startUp() {
+  const middleware = await koaWebpack({
+    compiler,
+    devMiddleware: {
+      publicPath: '/',
+      stats: 'errors-only',
+    }
+  });
 
-app.use(middlewareInstance);
+  app.use(middleware);
+  app.use(koaStatic(
+    pathResolve(__dirname, './dist'))
+  );
+  app.listen(port);
+}
 
-app.use(hotMiddleware(compiler));
 
 compiler.hooks.entryOption.tap('entryOption', (context, entry) => {
   console.log('=======', context, entry)
@@ -41,4 +52,4 @@ fs.watch(pathResolve('../src/pages'), (eventType, filename) => {
   // middlewareInstance.invalidate();
 });
 
-app.listen(7000);
+startUp();

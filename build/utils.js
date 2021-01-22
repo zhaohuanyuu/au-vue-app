@@ -11,7 +11,8 @@ module.exports = {
       const match = entryFile.match(/src\/pages\/(.*)\/index\.js/);
       const pageName = match && match[1];
 
-      entries[pageName] = [entryFile, 'webpack-hot-middleware/client'];
+      entries[pageName] = [entryFile];
+      // entries[pageName] = [entryFile, 'webpack-hot-middleware/client'];
       htmlPlugins.push(
         new HtmlWebpackPlugin({
           chunks: [pageName],

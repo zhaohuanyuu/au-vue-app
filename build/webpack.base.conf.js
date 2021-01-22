@@ -59,7 +59,7 @@ const config = env => {
 		entry: entry,
 		output: {
 			filename: '[name].[hash].js',
-			path: isDev ? '/' : pathResolve('../dist')
+			path: pathResolve('../dist')
 		},
 		resolve: {
 			mainFields: ['main'],
