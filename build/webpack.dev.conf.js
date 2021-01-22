@@ -8,8 +8,8 @@ module.exports = {
 	devtool: 'cheap-module-eval-source-map',
 	plugins:[
 		new webpack.ProgressPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     // new DynamicAddEntry(),
+    new webpack.HotModuleReplacementPlugin(),
 		new FriendlyErrorsWebpackPlugin({
 			compilationSuccessInfo: {
 				messages: ['Your application is running here http://localhost:7000'],

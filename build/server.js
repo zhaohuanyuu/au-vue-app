@@ -1,27 +1,28 @@
 const fs = require('fs');
 const { pathResolve } = require('./utils');
-let baseConfig = require('./webpack.base.conf')({ multi: true, development: true});
+const devConfig = require('./webpack.base.conf')({ multi: true, development: true});
 
 const webpack = require('webpack');
-const middleware = require('webpack-dev-middleware');
-const hotMiddleware = require('webpack-hot-middleware');
+const compiler = webpack(devConfig);
 
-const compiler = webpack(baseConfig);
-const middlewareInstance = middleware(compiler);
-const express = require('express');
-const app = express();
+// const Koa = require('koa');
+// const app = new Koa();
+const Express = require('express');
+const app = new Express();
+const devMiddleware = require('webpack-dev-middleware');
+const hotMiddleware = require('webpack-hot-middleware');
+const middlewareInstance = devMiddleware(compiler, {
+  publicPath: '/',
+  stats: 'errors-only',
+});
+
+app.use(middlewareInstance);
+
+app.use(hotMiddleware(compiler));
 
 compiler.hooks.entryOption.tap('entryOption', (context, entry) => {
   console.log('=======', context, entry)
 });
-
-app.use(middlewareInstance);
-// app.use(middleware(compiler, { logLevel: 'errors-only' }));
-
-app.use(hotMiddleware(compiler, {
-  overlay: true,
-  log: false
-}));
 
 fs.watch(pathResolve('../src/pages'), (eventType, filename) => {
   console.log(filename + ': trigger' +eventType);

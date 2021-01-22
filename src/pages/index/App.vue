@@ -1,17 +1,12 @@
 <template>
   <div>
-    <charts />
+    This is Index
   </div>
 </template>
 
 <script>
-  import charts from './echarts/index';
-
   export default {
     name: 'App',
-    components:{
-      charts
-    }
   }
 </script>
 

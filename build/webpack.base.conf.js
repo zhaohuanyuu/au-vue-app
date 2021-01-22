@@ -58,8 +58,8 @@ const config = env => {
 		mode: modeType,
 		entry: entry,
 		output: {
-			path: pathResolve('../dist'),
-			filename: '[name].[hash].js'
+			filename: '[name].[hash].js',
+			path: isDev ? '/' : pathResolve('../dist')
 		},
 		resolve: {
 			mainFields: ['main'],
@@ -180,7 +180,7 @@ const config = env => {
 				}
 			]
 		},
-		plugins: [
+    plugins: [
 			new VueLoaderPlugin(),
       new CleanWebpackPlugin(),
       new HardSourceWebpackPlugin(),
