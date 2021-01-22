@@ -11,10 +11,7 @@ const Express = require('express');
 const app = new Express();
 const devMiddleware = require('webpack-dev-middleware');
 const hotMiddleware = require('webpack-hot-middleware');
-const middlewareInstance = devMiddleware(compiler, {
-  publicPath: '/',
-  stats: 'errors-only',
-});
+const middlewareInstance = devMiddleware(compiler);
 
 app.use(middlewareInstance);
 
