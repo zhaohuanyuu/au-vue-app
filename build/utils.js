@@ -11,8 +11,6 @@ module.exports = {
       const match = entryFile.match(/src\/pages\/(.*)\/index\.js/);
       const pageName = match && match[1];
 
-      console.log(path.join(__dirname, '../public/assets/favicon.ico'));
-
       // entries[pageName] = [entryFile];
       entries[pageName] = [entryFile, 'webpack-hot-middleware/client'];
       htmlPlugins.push(

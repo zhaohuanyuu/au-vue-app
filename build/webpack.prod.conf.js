@@ -7,7 +7,8 @@ module.exports = {
 	devtool: 'cheap-module-source-map',
 	optimization: {
 		splitChunks: {
-			cacheGroups: {
+			// cacheGroups: {
+      defaultVendors: {
 				vendors: {
           chunks: 'all',
           name: 'vendors',
