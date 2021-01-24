@@ -1,6 +1,7 @@
 <template>
   <div>
-    This is Index
+    This is Index Page...
+    huhuhah
   </div>
 </template>
 

@@ -9,7 +9,7 @@ module.exports = {
 	plugins:[
 		new webpack.ProgressPlugin(),
     // new DynamicAddEntry(),
-    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
 		new FriendlyErrorsWebpackPlugin({
 			compilationSuccessInfo: {
 				messages: ['Your application is running here http://localhost:7000'],

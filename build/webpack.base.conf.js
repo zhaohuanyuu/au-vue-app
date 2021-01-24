@@ -22,6 +22,7 @@ const config = env => {
   // 生产环境单独提取css
   if (isProd) {
     prodPlugins.push(
+      new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
         name: '[name].[contenthash].[ext]'
       }),
@@ -48,18 +49,16 @@ const config = env => {
 	  const { entries, htmlPlugins } = getMultiPathMap(glob, HtmlWebpackPlugin);
 
 	  entry = () => entries;
-	  // entry = entries;
     htmlWebpackPlugins = htmlPlugins;
   }
-
-	// console.log(entry);
 
 	return {
 		mode: modeType,
 		entry: entry,
 		output: {
 			filename: '[name].[hash].js',
-			path: pathResolve('../dist')
+      publicPath: '/',
+			path: isDev ? '/' : pathResolve('../dist')
 		},
 		resolve: {
 			mainFields: ['main'],
@@ -182,7 +181,6 @@ const config = env => {
 		},
     plugins: [
 			new VueLoaderPlugin(),
-      new CleanWebpackPlugin(),
       new HardSourceWebpackPlugin(),
 		].concat(prodPlugins)
      .concat(htmlWebpackPlugins)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    This is Lottery page
+    This is test page
   </div>
 </template>
 
