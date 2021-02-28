@@ -14,6 +14,7 @@ const config = env => {
 	const isMulti = env.multi;
 	const modeType = isDev ? 'development' : 'production';
 	const pathSrc = pathResolve('../src');
+	const pathNodeModule = pathResolve('../node_modules');
 
 	const prodPlugins = [];
   // 生产环境单独提取css
@@ -46,6 +47,8 @@ const config = env => {
     htmlWebpackPlugins = htmlPlugins;
   }
 
+	console.log(pathResolve('src/views'));
+
   return {
 		mode: modeType,
 		entry: entry,
@@ -67,24 +70,27 @@ const config = env => {
 			},
 		},
 		module: {
-			/*rules: [
+			rules: [
 				{
 					test: /\.vue$/,
+					include: pathSrc,
+          exclude: pathNodeModule,
 					loader: 'vue-loader',
-					include: pathSrc
 				},
 				{
 					test: /\.jsx?$/,
-					loader: [
-						'thread-loader',
-						'babel-loader?cacheDirectory=true'
-					],
-					include: pathSrc
-				},
-				{
+					include: pathSrc,
+          exclude: pathNodeModule,
+          loader: [
+            'thread-loader',
+            'babel-loader?cacheDirectory=true'
+          ],
+        },
+			  	{
 					test: /\.s?css$/,
 					include: pathSrc,
-					use: [
+          exclude: pathNodeModule,
+          use: [
 						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
 						{
 
@@ -123,7 +129,7 @@ const config = env => {
 					test: /\.(woff|woff2|eot|ttf|otf)$/,
 					type: 'asset/resource'
 				}
-			]*/
+			]
 		},
     plugins: [
 			// new VueLoaderPlugin(),
@@ -136,6 +142,8 @@ module.exports = (env) => {
 	const baseConfig = config(env);
 	const devConfig = require('./webpack.dev.conf');
 	const prodConfig = require('./webpack.prod.conf');
+
+	// console.log(merge(baseConfig, devConfig));
 
 	return env.development
           ? merge(baseConfig, devConfig)

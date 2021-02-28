@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Detail from "@views/detail/detail";
+// import Detail from "@views/detail/detail";
 
 export default {
   name: "App",
