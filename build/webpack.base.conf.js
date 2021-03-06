@@ -27,7 +27,7 @@ const config = env => {
     );
   }
 
-  let entry = pathResolve('../src');
+  let entry = [pathResolve('../src'), 'webpack-hot-middleware/client'];
   let htmlWebpackPlugins = [new HtmlWebpackPlugin({
     title: 'au-vue-app',
     chunk: ['vendor', 'style'],
@@ -46,8 +46,6 @@ const config = env => {
 	  entry = () => entries;
     htmlWebpackPlugins = htmlPlugins;
   }
-
-	console.log(pathResolve('src/views'));
 
   return {
 		mode: modeType,
@@ -81,12 +79,12 @@ const config = env => {
 					test: /\.jsx?$/,
 					include: pathSrc,
           exclude: pathNodeModule,
-          loader: [
+          use: [
             'thread-loader',
             'babel-loader?cacheDirectory=true'
           ],
         },
-			  	{
+        {
 					test: /\.s?css$/,
 					include: pathSrc,
           exclude: pathNodeModule,
@@ -103,9 +101,11 @@ const config = env => {
 						{
 							loader: 'postcss-loader',
 							options: {
-								plugins: [
-									require('autoprefixer')()
-								]
+                postcssOptions: {
+                  plugins: [
+                    require('autoprefixer')()
+                  ]
+                }
 							}
 						},
             'sass-loader',
@@ -132,7 +132,7 @@ const config = env => {
 			]
 		},
     plugins: [
-			// new VueLoaderPlugin(),
+			new VueLoaderPlugin(),
 		].concat(prodPlugins)
      .concat(htmlWebpackPlugins)
 	}
