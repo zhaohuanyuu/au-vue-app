@@ -1,5 +1,4 @@
 import Vue from "vue";
-// import App from "@views/App";
 import App from "@views/App";
 
 new Vue({

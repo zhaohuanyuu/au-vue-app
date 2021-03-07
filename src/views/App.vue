@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       result: 0,
-      text: "To be a whale not just a fish!"
+      text: "To be a whale not just a fish!222"
     };
   }
 };
@@ -19,9 +19,12 @@ export default {
 
 <style lang="scss" scoped>
 	div{
-		color: lightcoral;
+		color: $color-coral;
 	}
 	p{
+    margin-top: 10%;
 		padding-left: 60px;
+    text-align: center;
+    font-size: 32px;
 	}
 </style>

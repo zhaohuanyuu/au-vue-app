@@ -2,6 +2,8 @@ const glob = require('glob');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -22,21 +24,36 @@ const config = env => {
     prodPlugins.push(
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        name: '[name].[contenthash].[ext]'
+        filename: '[name].[contenthash].[ext]',
+        chunkFilename: '[id].[contenthash].[ext]'
       })
     );
   }
 
   let entry = [pathResolve('../src'), 'webpack-hot-middleware/client'];
-  let htmlWebpackPlugins = [new HtmlWebpackPlugin({
-    title: 'au-vue-app',
-    chunk: ['vendor', 'style'],
-    // favicon: pathResolve('../public/assets/favicon.ico'),
-    template: pathResolve('../public/index.html'),
-    files: {
-      css: pathResolve('../src/scss/base.scss')
-    }
-  })];
+  let htmlWebpackPlugins = [
+    new HtmlWebpackPlugin({
+      title: 'au-vue-app',
+      chunk: ['vendor', 'styles'],
+      favicon: pathResolve('../public/assets/myicon.ico'),
+      template: pathResolve('../public/index.html'),
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: pathResolve('../static'),
+          to: 'static'
+        }
+      ]
+    }),
+    // new HtmlWebpackTagsPlugin({
+    //   append: true,
+    //   links: 'static/css/base.css',
+    //   attributes: {
+    //     type: 'css'
+    //   }
+    // })
+  ];
 
   // 多页面配置
 	if (isMulti) {
@@ -53,7 +70,7 @@ const config = env => {
 		output: {
       publicPath: '/',
       filename: '[name].[contenthash].js',
-			path: isDev ? '/' : pathResolve('../dist'),
+			path: pathResolve('../dist'),
       assetModuleFilename: 'images/[hash][ext][query]'
     },
 		resolve: {
@@ -95,7 +112,6 @@ const config = env => {
 							loader: 'css-loader',
 							options: {
 								importLoaders: 3,
-								// esModule: false
 							}
 						},
 						{

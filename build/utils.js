@@ -18,7 +18,7 @@ module.exports = {
           chunks: [pageName],
           filename: `${pageName}.html`,
           // template: path.resolve(__dirname, '../public/index.html'),
-          favicon: path.join(__dirname, '../public/assets/favicon.ico'),
+          favicon: path.join(__dirname, '../public/assets/myicon.ico'),
           template: path.join(__dirname, `../src/pages/${pageName}/index.html`)
         })
       );

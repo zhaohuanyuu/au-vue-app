@@ -1,28 +1,30 @@
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
+const Os = require('os');
 const { pathResolve } = require('./utils');
+const pathSrc = pathResolve('../src');
+const pathNodeModule = pathResolve('../node_modules');
 
 module.exports = {
 	devtool: 'cheap-module-source-map',
 	optimization: {
+    sideEffects: true,
 		splitChunks: {
-			// cacheGroups: {
-      defaultVendors: {
-				vendors: {
+      cacheGroups: {
+        defaultVendors: {
           chunks: 'all',
           name: 'vendors',
-					test: /[\\/]node_modules[\\/]/,
-					filename: "[name].js"
-				},
-        styles: {
-          name: 'style',
-          test: /\.s?css$/,
-          chunks: 'initial',
-          enforce: true,
+          test: /[\\/]node_modules[\\/]/,
           filename: "[name].js"
+        },
+        styles: {
+          name: 'styles',
+          type: 'css/mini-extract',
+          chunks: 'all',
+          enforce: true,
         }
-			}
+      }
 		},
 		minimizer: [
 			new TerserPlugin({
@@ -34,7 +36,20 @@ module.exports = {
 					drop_debugger: true
 				}
 			}),
-			new OptimizeCssAssetsPlugin({})
+			new CssMinimizerPlugin({
+        test: /\.css$/,
+        include: pathSrc,
+        exclude: pathNodeModule,
+        parallel: Os.cpus().length,
+        minimizerOptions: {
+          preset: [
+            'default',
+            {
+              discardComments: { removeAll: true }
+            }
+          ]
+        }
+      })
 		]
 	}
 };
