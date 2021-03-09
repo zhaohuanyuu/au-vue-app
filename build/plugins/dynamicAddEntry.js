@@ -1,4 +1,4 @@
-const { getMultiPathMap }  = require('./utils');
+const { getMultiPathMap }  = require('../utils');
 const DynamicEntryPlugin = 'webpack/lib/DynamicEntryPlugin';
 
 // Based on https://github.com/webpack/webpack/blob/master/lib/DynamicEntryPlugin.js#L29-L37
