@@ -10,6 +10,7 @@ const hotMiddleware = require('webpack-hot-middleware');
 const app = new Express();
 const compiler = webpack(devConfig);
 const port = process.env.PORT || 7000;
+
 const middlewareInstance = devMiddleware(compiler, {
   stats: 'errors-only',
 });

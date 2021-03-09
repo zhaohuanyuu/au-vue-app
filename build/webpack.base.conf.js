@@ -6,7 +6,7 @@ const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-styles-extract-plugin');
 
 const { pathResolve } = require('./utils');
 
@@ -35,7 +35,7 @@ const config = env => {
     new HtmlWebpackPlugin({
       title: 'au-vue-app',
       chunk: ['vendor', 'styles'],
-      favicon: pathResolve('../public/assets/myicon.ico'),
+      favicon: pathResolve('../public/logo.ico'),
       template: pathResolve('../public/index.html'),
     }),
     new CopyPlugin({
@@ -48,9 +48,9 @@ const config = env => {
     }),
     // new HtmlWebpackTagsPlugin({
     //   append: true,
-    //   links: 'static/css/base.css',
+    //   links: 'static/styles/base.styles',
     //   attributes: {
-    //     type: 'css'
+    //     type: 'styles'
     //   }
     // })
   ];
@@ -106,10 +106,10 @@ const config = env => {
 					include: pathSrc,
           exclude: pathNodeModule,
           use: [
-						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
+						isDev ? 'vue-styles-loader' : MiniCssExtractPlugin.loader,
 						{
 
-							loader: 'css-loader',
+							loader: 'styles-loader',
 							options: {
 								importLoaders: 3,
 							}

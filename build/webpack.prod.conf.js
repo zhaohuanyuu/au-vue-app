@@ -1,5 +1,5 @@
 const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CssMinimizerPlugin = require('styles-minimizer-webpack-plugin');
 
 const Os = require('os');
 const { pathResolve } = require('./utils');
@@ -20,7 +20,7 @@ module.exports = {
         },
         styles: {
           name: 'styles',
-          type: 'css/mini-extract',
+          type: 'styles/mini-extract',
           chunks: 'all',
           enforce: true,
         }
