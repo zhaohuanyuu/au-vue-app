@@ -1,5 +1,4 @@
-const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('styles-minimizer-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const Os = require('os');
 const { pathResolve } = require('./utils');
@@ -7,7 +6,7 @@ const pathSrc = pathResolve('../src');
 const pathNodeModule = pathResolve('../node_modules');
 
 module.exports = {
-	devtool: 'cheap-module-source-map',
+	devtool: 'nosources-source-map',
 	optimization: {
     sideEffects: true,
 		splitChunks: {
@@ -27,15 +26,6 @@ module.exports = {
       }
 		},
 		minimizer: [
-			new TerserPlugin({
-				cache: true,
-				parallel: true,
-				sourceMap: true,
-				terserOptions: {
-					drop_console: true,
-					drop_debugger: true
-				}
-			}),
 			new CssMinimizerPlugin({
         test: /\.css$/,
         include: pathSrc,

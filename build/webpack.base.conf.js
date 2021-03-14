@@ -6,7 +6,7 @@ const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-styles-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { pathResolve } = require('./utils');
 
@@ -24,13 +24,13 @@ const config = env => {
     prodPlugins.push(
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].[contenthash].[ext]',
-        chunkFilename: '[id].[contenthash].[ext]'
+        filename: '[name].[contenthash].css',
+        chunkFilename: '[id].[contenthash].css'
       })
     );
   }
 
-  let entry = [pathResolve('../src'), 'webpack-hot-middleware/client'];
+  let entry = isDev ? [pathSrc, 'webpack-hot-middleware/client'] : pathSrc;
   let htmlWebpackPlugins = [
     new HtmlWebpackPlugin({
       title: 'au-vue-app',
@@ -106,10 +106,10 @@ const config = env => {
 					include: pathSrc,
           exclude: pathNodeModule,
           use: [
-						isDev ? 'vue-styles-loader' : MiniCssExtractPlugin.loader,
+						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
 						{
 
-							loader: 'styles-loader',
+							loader: 'css-loader',
 							options: {
 								importLoaders: 3,
 							}
