@@ -1,13 +1,12 @@
 const glob = require('glob');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
-const svgToMiniDataURI = require('mini-svg-data-uri');
+const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const PurgecssPlugin = require('purgecss-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 const { pathResolve } = require('./utils');
 
@@ -17,53 +16,66 @@ const config = env => {
 	const isMulti = env.multi;
 	const modeType = isDev ? 'development' : 'production';
 	const pathSrc = pathResolve('../src');
+	const pathNodeModule = pathResolve('../node_modules');
 
 	const prodPlugins = [];
   // 生产环境单独提取css
   if (isProd) {
     prodPlugins.push(
+      new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        name: '[name].[contenthash].[ext]'
-      }),
-      // new PurgecssPlugin({
-      //   paths: glob.sync(`${pathSrc}/**/*.vue`, { nodir: true }),
-      //   // whitelistPatterns: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ]
-      // })
+        filename: '[name].[contenthash].css',
+        chunkFilename: '[id].[contenthash].css'
+      })
     );
   }
 
-  let entry = pathResolve('../src');
-  let htmlWebpackPlugins = [new HtmlWebpackPlugin({
-    title: 'au-vue-app',
-    chunk: ['vendor', 'style'],
-    favicon: pathResolve('../public/assets/favicon.ico'),
-    template: pathResolve('../public/index.html'),
-    files: {
-      css: pathResolve('../src/scss/base.scss')
-    }
-  })];
+  let entry = isDev ? [pathSrc, 'webpack-hot-middleware/client'] : pathSrc;
+  let htmlWebpackPlugins = [
+    new HtmlWebpackPlugin({
+      title: 'au-vue-app',
+      chunk: ['vendor', 'styles'],
+      favicon: pathResolve('../public/logo.ico'),
+      template: pathResolve('../public/index.html'),
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: pathResolve('../static'),
+          to: 'static'
+        }
+      ]
+    }),
+    // new HtmlWebpackTagsPlugin({
+    //   append: true,
+    //   links: 'static/styles/base.styles',
+    //   attributes: {
+    //     type: 'styles'
+    //   }
+    // })
+  ];
+
   // 多页面配置
 	if (isMulti) {
 	  const { getMultiPathMap } = require('./utils');
 	  const { entries, htmlPlugins } = getMultiPathMap(glob, HtmlWebpackPlugin);
 
 	  entry = () => entries;
-	  // entry = entries;
     htmlWebpackPlugins = htmlPlugins;
   }
 
-	// console.log(entry);
-
-	return {
+  return {
 		mode: modeType,
 		entry: entry,
 		output: {
+      publicPath: '/',
+      filename: '[name].[contenthash].js',
 			path: pathResolve('../dist'),
-			filename: '[name].[hash].js'
-		},
+      assetModuleFilename: 'images/[hash][ext][query]'
+    },
 		resolve: {
 			mainFields: ['main'],
-			extensions: ['.vue', '.js', '.json'],
+			extensions: ['.js', '.vue', '.json'],
 			modules: [pathResolve('../node_modules')],
 			alias: {
         '@scss': pathResolve('../src/common/scss'),
@@ -76,36 +88,40 @@ const config = env => {
 			rules: [
 				{
 					test: /\.vue$/,
+					include: pathSrc,
+          exclude: pathNodeModule,
 					loader: 'vue-loader',
-					include: pathSrc
 				},
 				{
 					test: /\.jsx?$/,
-					loader: [
-						'thread-loader',
-						'babel-loader?cacheDirectory=true'
-					],
-					include: pathSrc
-				},
-				{
+					include: pathSrc,
+          exclude: pathNodeModule,
+          use: [
+            'thread-loader',
+            'babel-loader?cacheDirectory=true'
+          ],
+        },
+        {
 					test: /\.s?css$/,
 					include: pathSrc,
-					use: [
+          exclude: pathNodeModule,
+          use: [
 						isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
 						{
 
 							loader: 'css-loader',
 							options: {
 								importLoaders: 3,
-								// esModule: false
 							}
 						},
 						{
 							loader: 'postcss-loader',
 							options: {
-								plugins: [
-									require('autoprefixer')()
-								]
+                postcssOptions: {
+                  plugins: [
+                    require('autoprefixer')()
+                  ]
+                }
 							}
 						},
             'sass-loader',
@@ -122,68 +138,17 @@ const config = env => {
 					]
 				},
 				{
-					test: /\.(png|jpe?g|gif|webp)$/i,
-					use: [
-						{
-							loader: 'url-loader',
-							options: {
-								limit: 8192,
-								esModule: false,
-								outputPath: 'images',
-								name: '[name].[hash:7].[ext]',
-							},
-						},
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65
-                },
-                optipng: {
-                  enabled: false,
-                },
-                pngquant: {
-                  quality: [0.65, 0.90],
-                  speed: 4
-                },
-                gifsicle: {
-                  interlaced: false,
-                },
-                webp: {
-                  quality: 75
-                }
-              }
-            }
-					],
-				},
-				{
-					test: /\.svg$/i,
-					use: [
-						{
-							loader: 'url-loader',
-							options: {
-								generator: (content) => svgToMiniDataURI(content.toString()),
-							},
-						},
-					],
+					test: /\.(png|jpe?g|gif|svg|webp)$/i,
+          type: 'asset/resource'
 				},
 				{
 					test: /\.(woff|woff2|eot|ttf|otf)$/,
-					loader: 'url-loader',
-					include: pathSrc,
-					options: {
-						limit: 4096,
-						name: '[name].[contenthash:5].[ext]',
-						outputPath: 'fonts'
-					}
+					type: 'asset/resource'
 				}
 			]
 		},
-		plugins: [
+    plugins: [
 			new VueLoaderPlugin(),
-      new CleanWebpackPlugin(),
-      new HardSourceWebpackPlugin(),
 		].concat(prodPlugins)
      .concat(htmlWebpackPlugins)
 	}
@@ -193,6 +158,8 @@ module.exports = (env) => {
 	const baseConfig = config(env);
 	const devConfig = require('./webpack.dev.conf');
 	const prodConfig = require('./webpack.prod.conf');
+
+	// console.log(merge(baseConfig, devConfig));
 
 	return env.development
           ? merge(baseConfig, devConfig)

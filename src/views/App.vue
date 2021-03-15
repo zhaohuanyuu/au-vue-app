@@ -1,18 +1,13 @@
 <template>
   <div>
-    <Detail />
     <p class="text">{{ text }}</p>
   </div>
 </template>
 
 <script>
-import Detail from "@views/detail/detail";
 
 export default {
   name: "App",
-  components: {
-    Detail
-  },
   data() {
     return {
       result: 0,
@@ -24,9 +19,12 @@ export default {
 
 <style lang="scss" scoped>
 	div{
-		color: lightcoral;
-	}
-	p{
-		padding-left: 60px;
+		color: $color-coral;
+    p{
+      margin-top: 10%;
+      padding-left: 60px;
+      text-align: center;
+      font-size: 32px;
+    }
 	}
 </style>

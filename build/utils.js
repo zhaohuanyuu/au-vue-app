@@ -11,13 +11,14 @@ module.exports = {
       const match = entryFile.match(/src\/pages\/(.*)\/index\.js/);
       const pageName = match && match[1];
 
+      // entries[pageName] = [entryFile];
       entries[pageName] = [entryFile, 'webpack-hot-middleware/client'];
       htmlPlugins.push(
         new HtmlWebpackPlugin({
           chunks: [pageName],
           filename: `${pageName}.html`,
           // template: path.resolve(__dirname, '../public/index.html'),
-          favicon: path.join(__dirname, '../public/assets/favicon.ico'),
+          favicon: path.join(__dirname, '../public/assets/logo.ico'),
           template: path.join(__dirname, `../src/pages/${pageName}/index.html`)
         })
       );
